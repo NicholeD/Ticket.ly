@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "build phase"
+      - ./buildScripts/runIntegrationTests.sh
+
+reports:
+  integration-task1-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/ticketsystem-integration-task1/*.xml'
+    file-format: "JUNITXML"
+  integration-task2-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/ticketsystem-integration-task2/*.xml'
+    file-format: "JUNITXML"
+  integration-task3-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/ticketsystem-integration-task3/*.xml'
+    file-format: "JUNITXML"
+  integration-task4-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/ticketsystem-integration-task4/*.xml'
+    file-format: "JUNITXML"
+  integration-task5-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/ticketsystem-integration-task5/*.xml'
+    file-format: "JUNITXML"
+  integration-task6-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/ticketsystem-integration-task6/*.xml'
+    file-format: "JUNITXML"

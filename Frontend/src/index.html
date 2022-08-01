@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="ticketPurchase.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body class="background">
+    <header class="header" id="header">
+        <div class="site-title">
+            <a class="header_home" href="index.html">Ticket.ly</a>
+            <a class="header_nav_link button" href="admin.html">Manage Concerts</a>
+        </div>
+    </header>
+    <p class="about">
+        Welcome to Ticket.ly!  Kenzie's #1 concert ticket resale platform.
+    </p>
+    <div class="card">
+        <h3>How to use Ticket.ly</h3>
+        <p>Ticket.ly is a ticket reselling platform.  Other people list their tickets up for sale, and you can sell them for a cut of the profit!</p>
+        <p>Select a concert that you would like to sell ticket for, then reserve a ticket.  You can then sell that ticket and report back how much you sold it for.</p>
+    </div>
+    <div class="card state active" id="loading">
+        Loading...
+    </div>
+    <div class="card state" id="no-concerts">
+        <h3>There are no Concerts!</h3>
+        <p>Have tickets to sell?  Go to the <a href="admin.html">Manage Concerts</a> page and create a concert.</p>
+    </div>
+    <div class="card state" id="choose-concert">
+        <h2 id="playlist-name">Step One - Pick a Concert</h2>
+        <form class="card-content" id="choose-concert-form">
+            <p class="form-field">
+                <label>Choose a Concert</label>
+                <select required class="validated-field" id="choose-concert-input">
+                    <option value="">No Concerts Available</option>
+                </select>
+            </p>
+            <button type="submit">Continue</button>
+        </form>
+    </div>
+    <div class="card state" id="reserve-tickets">
+        <p id="reserve-ticket-info"></p>
+        <button id="reserve-ticket-button">Reserve a ticket</button>
+    </div>
+    <div class="card state" id="purchase-tickets">
+        <p id="purchase-ticket-info"></p>
+        <form class="card-content" id="purchase-ticket-form">
+            <p class="form-field">
+                <label>Purchase Price</label>
+                <input type="number" required class="validated-field" id="purchase-price">
+            </p>
+            <button type="submit">Purchase</button>
+        </form>
+    </div>
+    <div class="card state" id="done">
+        <p id="done-info"></p>
+    </div>
+</body>
+</html>

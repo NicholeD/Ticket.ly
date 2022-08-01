@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="concertAdmin.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body class="background">
+    <header class="header" id="header">
+        <div class="site-title">
+            <a class="header_home" href="admin.html">Ticket.ly Concert Dashboard</a>
+            <a class="header_nav_link button" href="index.html">Buy Tickets</a>
+        </div>
+    </header>
+    <button type="button" id="refresh" style="margin-left: 20px;margin-top: 20px;">Refresh</button>
+    <div class="card">
+        <h2>Create a Concert</h2>
+        <p>Have tickets to a concert that you want to sell?  Add them here!  Then our Ticket Resellers will sell your tickets through Ticket.ly!</p>
+        <form class="card-content" id="create-playlist-form">
+            <p class="form-field">
+                <label>What is the concert name?</label>
+                <input type="text" required class="validated-field" id="concert-name" placeholder="concert name..." autofocus>
+            </p>
+            <p class="form-field">
+                <label>What day is the concert?</label>
+                <input type="date" required id="date" class="date validated-field">
+            </p>
+            <p class="form-field">
+                <label>What is the minimum ticket price?</label>
+                <input type="number" required class="validated-field" id="ticket-price" placeholder="0">
+            </p>
+            <button type="submit" id="create-concert">Create</button>
+        </form>
+    </div>
+    <div id="concert-list"></div>
+</body>
+</html>
