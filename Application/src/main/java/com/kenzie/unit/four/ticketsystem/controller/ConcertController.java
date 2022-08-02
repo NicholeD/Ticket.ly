@@ -99,7 +99,7 @@ public class ConcertController {
 
     @DeleteMapping("/{concertId}")
     public ResponseEntity deleteConcertById(@PathVariable("concertId") String concertId) {
-        // Your code here
-        return null;
+        concertService.deleteConcert(concertId);
+        return ResponseEntity.noContent().build();
     }
 }
