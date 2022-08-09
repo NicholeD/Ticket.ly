@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.UUID.randomUUID;
@@ -28,14 +29,22 @@ public class ReservedTicketController {
     }
 
     // TODO - Task 2: reserveTicket() - POST
-    // Add the correct annotation
+    @PostMapping
     public ResponseEntity<ReservedTicketResponse> reserveTicket(
             @RequestBody ReservedTicketCreateRequest reservedTicketCreateRequest) {
+        String concertId = reservedTicketCreateRequest.getConcertId();
+        String ticketId = randomUUID().toString();
+        String dateOfReservation = LocalDateTime.now().toString();
 
-        // Add your code here
+        ReservedTicket reservedTicket = new ReservedTicket(concertId, ticketId, dateOfReservation);
+        reservedTicketService.reserveTicket(reservedTicket);
+        ReservedTicketResponse response = new ReservedTicketResponse();
+        response.setTicketId(reservedTicket.getTicketId());
+        response.setDateOfReservation(reservedTicket.getDateOfReservation());
+        response.setConcertId(reservedTicket.getConcertId());
 
         // Return your ReservedTicketResponse instead of null
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(response);
     }
 
     // TODO - Task 3: getAllReserveTicketsByConcertId() - GET `/concerts/{concertId}`
