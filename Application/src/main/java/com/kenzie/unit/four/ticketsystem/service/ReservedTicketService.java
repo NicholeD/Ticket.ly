@@ -2,9 +2,12 @@ package com.kenzie.unit.four.ticketsystem.service;
 
 import com.kenzie.unit.four.ticketsystem.repositories.ReservedTicketRepository;
 import com.kenzie.unit.four.ticketsystem.repositories.model.ReserveTicketRecord;
+import com.kenzie.unit.four.ticketsystem.service.model.Concert;
 import com.kenzie.unit.four.ticketsystem.service.model.ReservedTicket;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +62,20 @@ public class ReservedTicketService {
 
     public ReservedTicket reserveTicket(ReservedTicket reservedTicket) {
         // Your code here
-        return null;
+        Concert concert = concertService.findByConcertId(reservedTicket.getConcertId());
+
+        if (concert == null || concert.getReservationClosed()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Concert reservations are closed or the concert doesn't exist");
+        }
+
+        ReserveTicketRecord record = new ReserveTicketRecord();
+        record.setTicketId(reservedTicket.getTicketId());
+        record.setConcertId(reservedTicket.getConcertId());
+        record.setDateOfReservation(reservedTicket.getDateOfReservation());
+
+        reservedTicketRepository.save(record);
+        return reservedTicket;
     }
 
     public ReservedTicket findByReserveTicketId(String reserveTicketId) {

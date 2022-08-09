@@ -32,11 +32,14 @@ public class ReservedTicketController {
     @PostMapping
     public ResponseEntity<ReservedTicketResponse> reserveTicket(
             @RequestBody ReservedTicketCreateRequest reservedTicketCreateRequest) {
-        String concertId = reservedTicketCreateRequest.getConcertId();
-        String ticketId = randomUUID().toString();
-        String dateOfReservation = LocalDateTime.now().toString();
 
-        ReservedTicket reservedTicket = new ReservedTicket(concertId, ticketId, dateOfReservation);
+//        String concertId = reservedTicketCreateRequest.getConcertId();
+//        String ticketId = randomUUID().toString();
+//        String dateOfReservation = LocalDateTime.now().toString();
+
+        ReservedTicket reservedTicket = new ReservedTicket(reservedTicketCreateRequest.getConcertId(),
+                randomUUID().toString(),
+                LocalDateTime.now().toString());
         reservedTicketService.reserveTicket(reservedTicket);
         ReservedTicketResponse response = new ReservedTicketResponse();
         response.setTicketId(reservedTicket.getTicketId());
