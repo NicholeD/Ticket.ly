@@ -1,5 +1,7 @@
 package com.kenzie.unit.four.ticketsystem.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kenzie.unit.four.ticketsystem.controller.model.ReservedTicketCreateRequest;
 import com.kenzie.unit.four.ticketsystem.controller.model.ReservedTicketResponse;
 import com.kenzie.unit.four.ticketsystem.service.ReservedTicketService;
@@ -33,10 +35,6 @@ public class ReservedTicketController {
     public ResponseEntity<ReservedTicketResponse> reserveTicket(
             @RequestBody ReservedTicketCreateRequest reservedTicketCreateRequest) {
 
-//        String concertId = reservedTicketCreateRequest.getConcertId();
-//        String ticketId = randomUUID().toString();
-//        String dateOfReservation = LocalDateTime.now().toString();
-
         ReservedTicket reservedTicket = new ReservedTicket(reservedTicketCreateRequest.getConcertId(),
                 randomUUID().toString(),
                 LocalDateTime.now().toString());
@@ -45,8 +43,17 @@ public class ReservedTicketController {
         response.setTicketId(reservedTicket.getTicketId());
         response.setDateOfReservation(reservedTicket.getDateOfReservation());
         response.setConcertId(reservedTicket.getConcertId());
+        response.setPurchasedTicket(reservedTicket.getTicketPurchased());
+        response.setReservationClosed(reservedTicket.getReservationClosed());
+        response.setDateReservationClosed(reservedTicket.getDateReservationClosed());
 
-        // Return your ReservedTicketResponse instead of null
+//        try {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String serializedReservedTicket = objectMapper.writeValueAsString(response);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+
         return ResponseEntity.ok(response);
     }
 

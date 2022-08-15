@@ -61,7 +61,6 @@ public class ReservedTicketService {
     }
 
     public ReservedTicket reserveTicket(ReservedTicket reservedTicket) {
-        // Your code here
         Concert concert = concertService.findByConcertId(reservedTicket.getConcertId());
 
         if (concert == null || concert.getReservationClosed()) {
@@ -73,8 +72,12 @@ public class ReservedTicketService {
         record.setTicketId(reservedTicket.getTicketId());
         record.setConcertId(reservedTicket.getConcertId());
         record.setDateOfReservation(reservedTicket.getDateOfReservation());
+        record.setDateReservationClosed(reservedTicket.getDateReservationClosed());
+        record.setReservationClosed(reservedTicket.getReservationClosed());
+        record.setPurchasedTicket(reservedTicket.getTicketPurchased());
 
         reservedTicketRepository.save(record);
+        reservedTicketsQueue.add(reservedTicket);
         return reservedTicket;
     }
 
