@@ -194,6 +194,39 @@ public class ReservedTicketServiceTest {
      *  ------------------------------------------------------------------------ **/
 
     // Write additional tests here
+    @Test
+    void findByConcertId() {
+        //GIVEN
+        List<ReserveTicketRecord> reservedRecords = new ArrayList<>();
+        ReserveTicketRecord reserveTicketRecord = new ReserveTicketRecord();
+        reserveTicketRecord.setConcertId("abc");
+        reserveTicketRecord.setTicketId("123");
+        reserveTicketRecord.setDateOfReservation("08/08/23");
+        reserveTicketRecord.setReservationClosed(false);
+        reserveTicketRecord.setDateReservationClosed("12/08/22");
+        reserveTicketRecord.setPurchasedTicket(true);
+        reservedRecords.add(reserveTicketRecord);
+
+        ReservedTicket ticket = new ReservedTicket(reserveTicketRecord.getConcertId(),
+                reserveTicketRecord.getTicketId(),
+                reserveTicketRecord.getDateOfReservation(),
+                reserveTicketRecord.getReservationClosed(),
+                reserveTicketRecord.getDateReservationClosed(),
+                reserveTicketRecord.getPurchasedTicket());
+
+        when(reservedTicketRepository.findByConcertId(any())).thenReturn(reservedRecords);
+
+        //WHEN
+        List<ReservedTicket> reservedTickets = reservedTicketService.findByConcertId("abc");
+
+        //THEN
+        Assertions.assertEquals(reservedTickets.get(0).getTicketId(), ticket.getTicketId());
+        Assertions.assertEquals(reservedTickets.get(0).getConcertId(), ticket.getConcertId());
+        Assertions.assertEquals(reservedTickets.get(0).getDateOfReservation(), ticket.getDateOfReservation());
+        Assertions.assertEquals(reservedTickets.get(0).getReservationClosed(), ticket.getReservationClosed());
+        Assertions.assertEquals(reservedTickets.get(0).getDateReservationClosed(), ticket.getDateReservationClosed());
+
+    }
 
     /** ------------------------------------------------------------------------
      *  reservedTicketService.updateReserveTicket

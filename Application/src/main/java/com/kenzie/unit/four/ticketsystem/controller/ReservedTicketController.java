@@ -53,8 +53,7 @@ public class ReservedTicketController {
     }
 
     // TODO - Task 3: getAllReserveTicketsByConcertId() - GET `/concerts/{concertId}`
-    // Add the correct annotation
-    @GetMapping("/{concertId}")
+    @GetMapping("/concerts/{concertId}")
     public ResponseEntity<List<ReservedTicketResponse>> getAllReserveTicketsByConcertId(
             @PathVariable("concertId") String concertId) {
 
