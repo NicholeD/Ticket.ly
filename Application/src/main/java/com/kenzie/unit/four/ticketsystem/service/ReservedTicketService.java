@@ -98,7 +98,20 @@ public class ReservedTicketService {
 
     public List<ReservedTicket> findByConcertId(String concertId) {
         // Your code here
-        return null;
+        List<ReserveTicketRecord> reservedRecords = reservedTicketRepository.findByConcertId(concertId);
+        List<ReservedTicket> reservedTickets = new ArrayList<>();
+
+        for (ReserveTicketRecord record : reservedRecords) {
+            ReservedTicket ticket = new ReservedTicket(record.getConcertId(),
+                    record.getTicketId(),
+                    record.getDateOfReservation(),
+                    record.getReservationClosed(),
+                    record.getDateReservationClosed(),
+                    record.getPurchasedTicket());
+            reservedTickets.add(ticket);
+        }
+
+        return reservedTickets;
     }
 
     public ReservedTicket updateReserveTicket(ReservedTicket reservedTicket) {

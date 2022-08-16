@@ -7,6 +7,7 @@ import com.kenzie.unit.four.ticketsystem.controller.model.ReservedTicketResponse
 import com.kenzie.unit.four.ticketsystem.service.ReservedTicketService;
 import com.kenzie.unit.four.ticketsystem.service.model.ReservedTicket;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.UUID.randomUUID;
@@ -47,25 +49,36 @@ public class ReservedTicketController {
         response.setReservationClosed(reservedTicket.getReservationClosed());
         response.setDateReservationClosed(reservedTicket.getDateReservationClosed());
 
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String serializedReservedTicket = objectMapper.writeValueAsString(response);
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
-
         return ResponseEntity.ok(response);
     }
 
     // TODO - Task 3: getAllReserveTicketsByConcertId() - GET `/concerts/{concertId}`
     // Add the correct annotation
+    @GetMapping("/{concertId}")
     public ResponseEntity<List<ReservedTicketResponse>> getAllReserveTicketsByConcertId(
             @PathVariable("concertId") String concertId) {
 
         // Add your code here
+        List<ReservedTicket> reservedTickets = reservedTicketService.findByConcertId(concertId);
+        List<ReservedTicketResponse> reservedTicketResponses = new ArrayList<>();
 
-        // Return your List<ReservedTicketResponse> instead of null
-        return ResponseEntity.ok(null);
+
+        if (reservedTickets.isEmpty() || reservedTickets == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        for (ReservedTicket reservedTicket : reservedTickets) {
+            ReservedTicketResponse response = new ReservedTicketResponse();
+            response.setConcertId(reservedTicket.getConcertId());
+            response.setTicketId(reservedTicket.getTicketId());
+            response.setDateOfReservation(reservedTicket.getDateOfReservation());
+            response.setReservationClosed(reservedTicket.getReservationClosed());
+            response.setDateReservationClosed(reservedTicket.getDateReservationClosed());
+            response.setPurchasedTicket(reservedTicket.getTicketPurchased());
+
+            reservedTicketResponses.add(response);
+        }
+
+        return ResponseEntity.ok(reservedTicketResponses);
     }
-
 }
