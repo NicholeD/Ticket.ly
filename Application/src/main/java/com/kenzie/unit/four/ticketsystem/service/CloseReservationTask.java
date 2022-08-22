@@ -23,16 +23,14 @@ public class CloseReservationTask implements Runnable {
 
     @Override
     public void run() {
-       // Your code here
         ReservedTicket reservedTicket = reservedTicketService.findByReserveTicketId(reservedTicketsQueue.poll().getTicketId());
         LocalDateTime timeOfReservation = LocalDateTime.parse(reservedTicket.getDateOfReservation());
-        LocalDateTime timeNow = LocalDateTime.now();
-        Duration timeLapsed = Duration.between(timeOfReservation, timeNow);
+        Duration timeLapsed = Duration.between(timeOfReservation, LocalDateTime.now());
 
         if (!reservedTicket.getTicketPurchased() && timeLapsed.getSeconds() > durationToPay) {
             ReservedTicket closedTicket = new ReservedTicket(reservedTicket.getConcertId(),
                     reservedTicket.getTicketId(),
-                    reservedTicket.getDateOfReservation(), true, timeNow.toString(), false);
+                    reservedTicket.getDateOfReservation(), true, LocalDateTime.now().toString(), false);
             reservedTicketService.updateReserveTicket(closedTicket);
         } else {
             reservedTicketsQueue.add(reservedTicket);

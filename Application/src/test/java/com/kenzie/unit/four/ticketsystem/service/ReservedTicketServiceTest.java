@@ -47,7 +47,7 @@ public class ReservedTicketServiceTest {
      *  ------------------------------------------------------------------------ **/
 
     @Test
-    void findAllReservations() {
+    void findAllReservationTickets() {
         // GIVEN
         ReserveTicketRecord record1 = new ReserveTicketRecord();
         record1.setTicketId(randomUUID().toString());
@@ -102,23 +102,85 @@ public class ReservedTicketServiceTest {
      *  reservedTicketService.findAllUnclosedReservationTickets
      *  ------------------------------------------------------------------------ **/
 
-    // Write additional tests here
+    @Test
+    void findAllUnclosedReservationTickets() {
+        //GIVEN
+        List<ReserveTicketRecord> reservedTicketRecords = new ArrayList<>();
+
+        ReserveTicketRecord closedReservedRecord = new ReserveTicketRecord();
+        closedReservedRecord.setConcertId("C1");
+        closedReservedRecord.setTicketId("T1");
+        closedReservedRecord.setDateOfReservation("11/11/21");
+        closedReservedRecord.setReservationClosed(true);
+        closedReservedRecord.setDateReservationClosed("11/11/21");
+        closedReservedRecord.setPurchasedTicket(true);
+
+        ReservedTicket closedTicket = new ReservedTicket(closedReservedRecord.getConcertId(),
+                closedReservedRecord.getTicketId(),
+                closedReservedRecord.getDateOfReservation(),
+                closedReservedRecord.getReservationClosed(),
+                closedReservedRecord.getDateReservationClosed(),
+                closedReservedRecord.getPurchasedTicket());
+
+        ReserveTicketRecord closedReservedRecord2 = new ReserveTicketRecord();
+        closedReservedRecord.setConcertId("C1");
+        closedReservedRecord.setTicketId("T3");
+        closedReservedRecord.setDateOfReservation("11/11/21");
+        closedReservedRecord.setReservationClosed(true);
+        closedReservedRecord.setDateReservationClosed("11/11/21");
+        closedReservedRecord.setPurchasedTicket(false);
+
+        ReservedTicket closedTicket2 = new ReservedTicket(closedReservedRecord.getConcertId(),
+                closedReservedRecord.getTicketId(),
+                closedReservedRecord.getDateOfReservation(),
+                closedReservedRecord.getReservationClosed(),
+                closedReservedRecord.getDateReservationClosed(),
+                closedReservedRecord.getPurchasedTicket());
+
+        ReserveTicketRecord unclosedReservedRecord = new ReserveTicketRecord();
+        unclosedReservedRecord.setConcertId("C1");
+        unclosedReservedRecord.setTicketId("T2");
+        unclosedReservedRecord.setDateOfReservation("11/11/21");
+        unclosedReservedRecord.setReservationClosed(false);
+        unclosedReservedRecord.setDateReservationClosed("11/11/21");
+        unclosedReservedRecord.setPurchasedTicket(false);
+
+        ReservedTicket unclosedTicket = new ReservedTicket(unclosedReservedRecord.getConcertId(),
+                unclosedReservedRecord.getTicketId(),
+                unclosedReservedRecord.getDateOfReservation(),
+                unclosedReservedRecord.getReservationClosed(),
+                unclosedReservedRecord.getDateReservationClosed(),
+                unclosedReservedRecord.getPurchasedTicket());
+
+        reservedTicketRecords.add(closedReservedRecord);
+        reservedTicketRecords.add(unclosedReservedRecord);
+        reservedTicketRecords.add(closedReservedRecord2);
+
+
+        when(reservedTicketRepository.findAll()).thenReturn(reservedTicketRecords);
+
+        //WHEN
+        List<ReservedTicket> unclosedReservationTickets = reservedTicketService.findAllUnclosedReservationTickets();
+
+        //THEN
+        Assertions.assertEquals(unclosedReservationTickets.get(0).getTicketId(), unclosedTicket.getTicketId());
+        Assertions.assertFalse(unclosedReservationTickets.contains(closedTicket));
+        Assertions.assertFalse(unclosedReservationTickets.contains(closedTicket2));
+    }
 
     /** ------------------------------------------------------------------------
      *  reservedTicketService.reserveTicket
      *  ------------------------------------------------------------------------ **/
 
-    // Write additional tests here
     @Test
-    void reserveTicket_returnReservedTicket() {
+    void reserveTicket() {
         //GIVEN
         ReservedTicket reservedTicket = new ReservedTicket(randomUUID().toString(),
                 randomUUID().toString(),
-                "reserved date");
-        ReserveTicketRecord record = new ReserveTicketRecord();
-        record.setTicketId(reservedTicket.getTicketId());
-        record.setConcertId(reservedTicket.getConcertId());
-        record.setDateOfReservation(reservedTicket.getDateOfReservation());
+                "reserved date",
+                false,
+                null,
+                false);
 
         Concert concert = new Concert(reservedTicket.getConcertId(),
                 "Yo-yo Ma",
@@ -126,7 +188,7 @@ public class ReservedTicketServiceTest {
                 105.00,
                 false);
 
-        when(concertService.findByConcertId(any(String.class))).thenReturn(concert);
+        when(concertService.findByConcertId(any())).thenReturn(concert);
 
         //WHEN
         ReservedTicket reservedTicket2 = reservedTicketService.reserveTicket(reservedTicket);
@@ -136,15 +198,26 @@ public class ReservedTicketServiceTest {
     }
 
     @Test
+    void reserveTicket_withNullConcert_throwsResponseStatusException() {
+        //GIVEN
+        ReservedTicket reservedTicket = new ReservedTicket(randomUUID().toString(),
+                randomUUID().toString(),
+                "reserved date");
+
+        when(concertService.findByConcertId(any(String.class))).thenReturn(null);
+
+        //THEN - WHEN
+        Assertions.assertThrows(ResponseStatusException.class,
+                ()-> reservedTicketService.reserveTicket(reservedTicket));
+
+    }
+
+    @Test
     void reserveTicket_concertReservationClosed_throwsResponseStatusException() {
         //GIVEN
         ReservedTicket reservedTicket = new ReservedTicket(randomUUID().toString(),
                 randomUUID().toString(),
                 "reserved date");
-        ReserveTicketRecord record = new ReserveTicketRecord();
-        record.setTicketId(reservedTicket.getTicketId());
-        record.setConcertId(reservedTicket.getConcertId());
-        record.setDateOfReservation(reservedTicket.getDateOfReservation());
 
         Concert concert = new Concert(reservedTicket.getConcertId(),
                 "Yo-yo Ma",

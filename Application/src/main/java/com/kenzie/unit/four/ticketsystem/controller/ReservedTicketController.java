@@ -52,7 +52,6 @@ public class ReservedTicketController {
         return ResponseEntity.ok(response);
     }
 
-    // TODO - Task 3: getAllReserveTicketsByConcertId() - GET `/concerts/{concertId}`
     @GetMapping("/concerts/{concertId}")
     public ResponseEntity<List<ReservedTicketResponse>> getAllReserveTicketsByConcertId(
             @PathVariable("concertId") String concertId) {
@@ -60,7 +59,6 @@ public class ReservedTicketController {
         // Add your code here
         List<ReservedTicket> reservedTickets = reservedTicketService.findByConcertId(concertId);
         List<ReservedTicketResponse> reservedTicketResponses = new ArrayList<>();
-
 
         if (reservedTickets.isEmpty() || reservedTickets == null) {
             return ResponseEntity.noContent().build();

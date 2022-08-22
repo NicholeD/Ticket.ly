@@ -46,7 +46,6 @@ public class PurchasedTicketService {
                 true);
         reservedTicketService.updateReserveTicket(purchasedReserved);
 
-
         return new PurchasedTicket(purchasedReserved.getConcertId(),
                 purchasedReserved.getTicketId(),
                 LocalDate.now().toString(),

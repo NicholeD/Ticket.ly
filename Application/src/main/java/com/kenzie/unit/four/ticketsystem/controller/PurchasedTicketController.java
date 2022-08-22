@@ -26,8 +26,6 @@ public class PurchasedTicketController {
         this.reservedTicketService = reservedTicketService;
     }
 
-    // TODO - Task 5: purchaseTicket() - POST
-
     @PostMapping
     public ResponseEntity<PurchasedTicketResponse> purchaseTicket(
             @RequestBody PurchasedTicketCreateRequest purchasedTicketCreateRequest) {
