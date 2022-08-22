@@ -39,18 +39,27 @@ public class ConcertService {
     }
 
     public Concert findByConcertId(String concertId) {
-        Optional<ConcertRecord> optionalRecord = concertRepository.findById(concertId);
-
-        if (optionalRecord.isPresent()) {
-            ConcertRecord record = optionalRecord.get();
-            return new Concert(record.getId(),
-                    record.getName(),
-                    record.getDate(),
-                    record.getTicketBasePrice(),
-                    record.getReservationClosed());
-        } else {
-            return null;
+        Concert cachedConcert = cache.get(concertId);
+        // Check if concert is cached and return it if true
+        if (cachedConcert != null) {
+            return cachedConcert;
         }
+        // if not cached, find the concert
+        Concert concertFromBackendService = concertRepository
+                .findById(concertId)
+                .map(concert -> new Concert(concert.getId(),
+                        concert.getName(),
+                        concert.getDate(),
+                        concert.getTicketBasePrice(),
+                        concert.getReservationClosed()))
+                .orElse(null);
+
+        // if concert found, cache it
+        if (concertFromBackendService != null) {
+            cache.add(concertFromBackendService.getId(), concertFromBackendService);
+        }
+        // return concert
+        return concertFromBackendService;
     }
 
     public Concert addNewConcert(Concert concert) {
@@ -74,10 +83,13 @@ public class ConcertService {
             concertRecord.setReservationClosed(concert.getReservationClosed());
             concertRepository.save(concertRecord);
         }
+        //evict the cached concert
+        cache.evict(concert.getId());
     }
 
     public void deleteConcert(String concertId) {
         concertRepository.deleteById(concertId);
-
+        //evict cached concert
+        cache.evict(concertId);
     }
 }

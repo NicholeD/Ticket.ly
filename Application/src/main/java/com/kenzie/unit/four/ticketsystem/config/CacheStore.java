@@ -19,18 +19,14 @@ public class CacheStore {
     }
 
     public Concert get(String key) {
-        // Write your code here
-        // Retrieve and return the concert
-        return null;
+        return cache.getIfPresent(key);
     }
 
     public void evict(String key) {
-        // Write your code here
-        // Invalidate/evict the concert from cache
+        cache.invalidate(key);
     }
 
     public void add(String key, Concert value) {
-        // Write your code here
-        // Add concert to cache
+        cache.put(key, value);
     }
 }
