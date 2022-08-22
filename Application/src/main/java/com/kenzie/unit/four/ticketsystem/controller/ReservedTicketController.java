@@ -31,8 +31,7 @@ public class ReservedTicketController {
     ReservedTicketController(ReservedTicketService reservedTicketService) {
         this.reservedTicketService = reservedTicketService;
     }
-
-    // TODO - Task 2: reserveTicket() - POST
+    
     @PostMapping
     public ResponseEntity<ReservedTicketResponse> reserveTicket(
             @RequestBody ReservedTicketCreateRequest reservedTicketCreateRequest) {
