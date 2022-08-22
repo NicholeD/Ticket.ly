@@ -7,6 +7,7 @@ import com.kenzie.unit.four.ticketsystem.service.model.ReservedTicket;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +45,20 @@ public class PurchasedTicketServiceTest {
         PurchasedTicket purchasedTicket = purchasedTicketService.purchaseTicket("123", 150.00);
         //THEN
         Assertions.assertEquals(reservedTicket.getTicketId(), purchasedTicket.getTicketId());
+    }
+
+    @Test
+    void purchaseTicket_reservationClosed_throwsResponseStatusException() {
+        //GIVEN
+        ReservedTicket reservedTicket = new ReservedTicket("ABCabc", "123", "11/11/21",
+                true, null, false);
+
+        when(reservedTicketService.findByReserveTicketId(any())).thenReturn(reservedTicket);
+        //WHEN
+        //PurchasedTicket purchasedTicket = purchasedTicketService.purchaseTicket("123", 150.00);
+        //THEN
+        Assertions.assertThrows(ResponseStatusException.class,
+                () -> purchasedTicketService.purchaseTicket("123", 150.00));
     }
 
     /** ------------------------------------------------------------------------
